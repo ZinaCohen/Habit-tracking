@@ -31,3 +31,5 @@ The system is **self-contained**, relies only on Python's standard library, and 
    ```bash
    git clone https://github.com/[your-username]/habit-tracker.git
    cd habit-tracker
+   pip install -r requirements.txt
+   python habit_tracker.py
