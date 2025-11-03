@@ -1,0 +1,17 @@
+# ============================================================
+# Habit Tracker Project - requirements.txt
+# Python >= 3.7
+# This file defines the dependencies required to run,
+# test, and maintain the Habit Tracker CLI application.
+# ============================================================
+
+# --- Core CLI Framework ---
+click>=8.0          # Command-line interface library
+
+# --- Testing and Quality Assurance ---
+pytest>=7.0         # Unit testing framework
+flake8>=6.0         # Code style and linting tool (optional)
+black>=23.0         # Code formatter for consistent style (optional)
+
+# --- Documentation and Visualization (optional) ---
+graphviz>=0.20.1    # Used for generating UML or visual diagrams (optional)
