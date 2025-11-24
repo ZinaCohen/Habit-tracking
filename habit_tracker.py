@@ -29,15 +29,16 @@ Each has 4 weeks of completions for testing and demonstration.
 
 
 """
-
+# Libraries to import
 import json
 import os
 from dataclasses import dataclass, asdict
 from datetime import date, datetime, timedelta
 from typing import List, Dict, Optional
 
+# Filename used for storing all habits persistently as JSON.
 HABITS_FILENAME = "habits.json"
-DATE_FMT = "%Y-%m-%d"
+DATE_FMT = "%Y-%m-%d" # Standardized date format (ISO-like) used across the application for consistency.
 
 @dataclass
 class Habit:
@@ -53,7 +54,7 @@ def load_habits(filename: str = HABITS_FILENAME) -> List[Habit]:
         data = json.load(f)
     return [Habit(**x) for x in data]
 
-def save_habits(habits: List[Habit], filename: str = HABITS_FILENAME) -> None: #Serializes all habits to a JSON file; 
+def save_habits(habits: List[Habit], filename: str = HABITS_FILENAME) -> None: #Serialize and save all habits to a JSON file; 
     with open(filename, "w", encoding="utf-8") as f:
         json.dump([asdict(h) for h in habits], f, indent=2)
 
@@ -71,7 +72,7 @@ def create_habit(habits: List[Habit], name: str, periodicity: str) -> List[Habit
         raise ValueError("Periodicity must be 'daily' or 'weekly'.")
     return habits + [Habit(name, periodicity, [])]
 
-def delete_habit(habits: List[Habit], name: str) -> List[Habit]: #Deletes a habit by name.
+def delete_habit(habits: List[Habit], name: str) -> List[Habit]: # Deletes a habit by name.
     return [h for h in habits if h.name != name]
 
 def mark_complete(habits: List[Habit], name: str, when: date) -> List[Habit]: # Records the completion of a habit and asks for the date of completion
@@ -94,7 +95,7 @@ def _iso_to_date(s: str) -> date:
     return datetime.strptime(s, DATE_FMT).date() #  Converts an ISO date string into a `datetime.date` object.
 
 def _sorted_dates(h: Habit) -> List[date]:
-    return sorted(map(_iso_to_date, h.completions))
+    return sorted(map(_iso_to_date, h.completions)) # Return all completion dates of a habit sorted chronologically
 
 def _longest_run_for_dates(dates: List[date], step: int) -> int: # Computes the longest consecutive streak of dates separated by a step.
     if not dates:
@@ -146,12 +147,12 @@ def init_fixtures(filename: str = HABITS_FILENAME) -> None: # Creates predefined
 def main():
     habits = load_habits()
     while True:
-        print("\nOptions: list, add, delete, complete, analytics, init, exit")
+        print("\nOptions: list, add, delete, complete, analytics, init, exit") # Menu
         c = input("> ").strip()
-        if c == "list":
+        if c == "list": # List all habits with their completion count.
             for h in habits:
                 print(f"{h.name} ({h.periodicity}) - completions: {len(h.completions)}")
-        elif c == "add":
+        elif c == "add": # Create a new habit.
             name = input("Name: ")
             periodicity = input("Periodicity (daily/weekly): ")
             try:
@@ -160,12 +161,12 @@ def main():
                 print("Habit created.")
             except ValueError as e:
                 print(e)
-        elif c == "delete":
+        elif c == "delete": # Delete a habit by name.
             name = input("Name: ")
             habits = delete_habit(habits, name)
             save_habits(habits)
             print("Habit deleted (if it existed).")
-        elif c == "complete":
+        elif c == "complete":  # Mark a habit as completed at a given date.
             name = input("Name: ")
             d = input("Date (YYYY-MM-DD): ")
             try:
@@ -175,16 +176,16 @@ def main():
                 print("Completion recorded.")
             except Exception as e:
                 print("Error:", e)
-        elif c == "analytics":
+        elif c == "analytics": # Display longest streaks for all habits.
             results = longest_run_all(habits)
             print("Longest streaks:")
             for name, streak in results.items():
                 print(f"{name}: {streak}")
-        elif c == "init":
+        elif c == "init":  # Generate example dataset.
             init_fixtures()
             habits = load_habits()
             print("Fixtures initialized.")
-        elif c == "exit":
+        elif c == "exit":   # Terminate the program.
             break
         else:
             print("Unknown command.")
